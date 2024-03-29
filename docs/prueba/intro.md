@@ -2,82 +2,119 @@
 sidebar_position: 1
 ---
 
-# Instalación
+# Ejemplo usando PostMan para facturacion
 
+Facturacion electronica
+
+ --------
 ## Descripción
+ Hemos usado el postman para pobrar el ejemplo del que esta en la documentacion
 
-Hemos elaborado un script para uso en instancias Linux con Ubuntu 18 o superior, este es un archivo que actualiza el sistema, instala las herramientas, sus dependencias y realiza todas las configuraciones previas, dejando el aplicativo listo para probar en menos de 20 minutos (siempre y cuando el dominio ya esté configurado hacia la instancia), su ejecución es muy sencilla.
+*https://fastura.github.io/admin/API-rest-documentacion/Introduccion*
+## Accesos
+Inicialmente para hacer el uso de la api, necesitas un token y la url.
 
-## ✅ Requisitos Previos
-
-**1.-** Tener acceso a su servidor, vps, máquina virtual o local via SSH, en las instalaciones que realizamos para AWS o Google Cloud, hacemos entrega del usuario, la IP del servidor y la clave ssh que puede ser un archivo .ppk o .pem, recuerde almacenarlas en su equipo local.
-
-**2.-** Tener instalado una versión de ssh en su máquina para conectarse de manera remota, puede utilizar putty, filezilla o una consola terminal. para mayor información sobre el acceso SSH visite los siguientes manuales:
-
-[guía para acceder con Putty (gestión de servidor)](https://docs.google.com/document/d/1PmQejvNd_dkXVm8DPUYlQTag0wvES46tMpxX3MPhkNY/edit#heading=h.nezjsyganf1w)
-
-[guía para acceder con Winscp (gestión de archivos con aplicación de escritorio)](https://docs.google.com/document/d/1Xpri2102N4b5C-dG-FVPXW5ZWjEz5S4iDjpvl7Zwq2E/edit#heading=h.nezjsyganf1w)
-
-**3.-** Si es posible configurar su dominio apuntando a su instancia para que al finalizar la instalación se encuentre disponible el aplicativo. Edite los récords A y CNAME donde A debe contener su IP y CNAME el valor * (asterisco) para que se tomen los subdominios registrados por la herramienta.
-
-![Imagen-p1-1](/img/imagen1.png)
-
-**4.-** En caso de contar con servicios instalados en su instancia como mysql, apache o nginx, debe detenerlos, ya que estos ocupan los puertos que pasarán a usar el aplicativo con los contenedores de Docker.
-
-## 📝 Pasos
-
-**1.-** Acceder a su instancia vía SSH.
-
-**2.-** Loguearse como super usuario  
-`ejecute sudo su`
-
-**3.-** Clonar el snippet de gitlab que contiene el script  
-`git clone` [https://gitlab.com/snippets/2079063.git](https://gitlab.com/snippets/2079063.git) `script`
-
-**4.-** Ingrese a la carpeta clonada  
-`cd script`
-
-**5.-** Dar permisos de ejecución al script  
-`chmod +x install.sh`
-
-**6.-** El comando a utilizar para iniciar el despliegue requiere de un parámetro principalmente:  
-`./install.sh [dominio]`
-
-**por ejemplo:**
-
-`./install.sh facturador.pro`
+1. URL: https://grupo4.demo.soniviu.com/api/documents
+2. TOKEN: ckvGIvsL50RaDnFKZTdt9eXzABxy7snWxQr6MPn4EOMmPtKJcj
+:::tip IMPORTANTE
+El Token lo puede extraer desde la plataforma en el módulo USUARIOS, LOCALES Y SERIES - USUARIOS:
 
 
-**7.-** Una vez ejecutado el comando iniciará el proceso de actualización del sistema, en el proceso se le solicitará:   
-ㅤㅤ**a.** el usuario y contraseña de GitLab, para que se pueda descargar el proyecto en su instancia.  
-ㅤㅤ**b.** si desea instalar SSL gratuito, tenga en cuenta que este debe ser actualizado cada 90 días, el mensaje será el siguiente:  
-        ㅤㅤ`instalar con SSL? (debe tener acceso al panel de su dominio para`  
-        ㅤㅤ`editar/agregar records TXT). si[s] no[n]`  
-        ㅤㅤㅤㅤ**i.** deberá contestar con “s” o “n” para continuar  
-        ㅤㅤㅤㅤ**ii.** si selecciona SÍ, deberá contestar las siguientes preguntas con “y”, son 2 en total, seguidamente se le ofrecerá un  código que debe añadir en un récord tipo TXT en su dominio quedando como _acme-challenge.example.com o simplemente _acme-challeng dependerá de su proveedor.
+:::
+## Configuracion Postman
 
-ㅤㅤㅤㅤ![Imagen-p1-2](/img/imagen2.PNG)
 
-ㅤㅤㅤㅤ**iii.** para continuar presione **enter**, luego deberá repetir las acciones para añadir un segundo código y habrá finalizado la configuración, si el proceso es exitoso la ejecución del script continuará.
+1. Método: POST
+2. URL: https://grupo4.demo.soniviu.com/api/documents
+3. TOKEN: ckvGIvsL50RaDnFKZTdt9eXzABxy7snWxQr6MPn4EOMmPtKJcj
 
-ㅤㅤ**c.** si desea obtener y gestionar actualizaciones automáticas, deberá disponer de su sesión de gitlab al momento.  
-ㅤㅤ`configurar clave SSH para actualización automática? (requiere acceso a`  
-ㅤㅤ`https://gitlab.com/profile/keys). si[s] no[n]`  
-ㅤㅤㅤㅤ**i.** deberá contestar con “s” o “n” para continuar  
-ㅤㅤㅤㅤ**ii.** de seleccionar SÍ, al final del despliegue se le dará un extracto de texto que debe añadir a su configuración de gitlab
+## JSON A ENVIAR
+bash
+{
+  "serie_documento": "F001",
+  "numero_documento": "#",
+  "fecha_de_emision": "2024-03-28" <-- se cambio la fecha,
+  "hora_de_emision": "10:11:11",
+  "codigo_tipo_operacion": "0101",
+  "codigo_tipo_documento":"01",
+  "codigo_tipo_moneda": "PEN",
+  "fecha_de_vencimiento":"2024-03-28" <-- se cambio la fecha,
+  "numero_orden_de_compra": "0045467898", 
+  "datos_del_cliente_o_receptor":{
+    "codigo_tipo_documento_identidad": "6",
+    "numero_documento": "10414711225",
+    "apellidos_y_nombres_o_razon_social": "EMPRESA XYZ S.A.",
+    "codigo_pais": "PE",
+    "ubigeo": "150101",
+    "direccion": "Av. 2 de Mayo",
+    "correo_electronico": "demo@gmail.com",
+    "telefono": "427-1148"
+  },
+  "totales": {
+    "total_exportacion": 0.00,
+    "total_operaciones_gravadas": 100.00,
+    "total_operaciones_inafectas": 0.00,
+    "total_operaciones_exoneradas": 0.00,
+    "total_operaciones_gratuitas": 0.00,
+    "total_igv": 18.00,
+    "total_impuestos": 18.00,
+    "total_valor": 100,
+    "total_venta": 118
+  },
+  "items":[
+    {
+      "codigo_interno": "P0121",
+      "descripcion":"Inca Kola 250 ml",
+      "codigo_producto_sunat": "51121703",
+      "unidad_de_medida": "NIU",
+      "cantidad": 2,
+      "valor_unitario": 50,
+      "codigo_tipo_precio": "01",
+      "precio_unitario": 59,
+      "codigo_tipo_afectacion_igv": "10",
+      "total_base_igv": 100.00,
+      "porcentaje_igv": 18,
+      "total_igv": 18,
+      "total_impuestos": 18,
+      "total_valor_item": 100,
+      "total_item": 118
+    }
+  ],
+  "informacion_adicional": "Forma de pago:Efectivo|Caja: 1"
+}
 
-ㅤㅤㅤㅤ![Imagen-p1-2](/img/imagen3.PNG)
+## JSON RESPUESTA
 
-**8.-** Finalizado el script y dependiendo de sus selecciones anteriores, se le entregará varios datos que debe guardar, como;  
-ㅤㅤ**a.-**  Usuario Administrador  
-ㅤㅤ**b.-**  Contraseña para usuario administrador  
-ㅤㅤ**c.-**  Url del proyecto  
-ㅤㅤ**d.-**  Ubicación del proyecto dentro del servidor  
-ㅤㅤ**e.-**  Clave ssh para añadir a gitlab (obligatorio para quienes seleccionan la instalación de SSH)
+bash
+{
+    "success": true,
+    "data": {
+        "number": "F001-4",
+        "filename": "44444444444-01-F001-4",
+        "external_id": "319dbe89-cbab-444e-a3a0-18074c98c5bb",
+        "state_type_id": "05",
+        "state_type_description": "Aceptado",
+        "number_to_letter": "Ciento dieciocho  con 00/100 ",
+        "hash": "vnOgHDDAtAckpLE9Ipwle4AnSUo=",
+        "qr": "iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAIAAACzY+a1AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAgAElEQVR4AQCbgGR",
+        "id": 4
+    },
+    "links": {
+        "xml": "https://grupo4.demo.soniviu.com/downloads/document/xml/319dbe89-cbab-444e-a3a0-18074c98c5bb",
+        "pdf": "https://grupo4.demo.soniviu.com/downloads/document/pdf/319dbe89-cbab-444e-a3a0-18074c98c5bb",
+        "cdr": "https://grupo4.demo.soniviu.com/downloads/document/cdr/319dbe89-cbab-444e-a3a0-18074c98c5bb"
+    },
+    "response": {
+        "code": "0",
+        "description": "La Factura numero F001-4, ha sido aceptada",
+        "notes": []
+    }
+}
 
-## 😎 Enlaces de interés
+## Captura de los resultados en el postman y en la web
+En esta parte probamos el JSON y verificamos si se envia correctamente a la web
 
-- [Actualización de SSL](https://gitlab.com/b.mendoza/facturadorpro3/snippets/1955372)
-- [Actualización mediante ejecución Script para instalaciones Docker](https://gitlab.com/b.mendoza/facturadorpro3/-/wikis/Script-Update-Docker)  
-- [Gestión de SSL independiente, no el que incorpora el Script](https://docs.google.com/document/d/1D87YJ9fq9yHiAauu6SGVugiC3m_i42DrFUt6VKYXuDI/edit?usp=sharing)  
-- [Guía gitlab para la instalación, contiene el script usado en el presente manual,](https://gitlab.com/b.mendoza/facturadorpro3/snippets/1971490) 
+### Ejemplo postman 
+
+
+### Resultado en la web
